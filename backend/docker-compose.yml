@@ -1,0 +1,33 @@
+name: jobportal
+
+networks:
+  default:
+    name: jobportal
+
+services:
+  webserver:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - 4000:4000
+    command: yarn dev
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: genos
+      MONGO_INITDB_ROOT_PASSWORD: genos
+      MONGO_INITDB_DATABASE: jobportal
+    ports:
+      - 27017:27017
+    volumes:
+      - ./.data:/data/db
